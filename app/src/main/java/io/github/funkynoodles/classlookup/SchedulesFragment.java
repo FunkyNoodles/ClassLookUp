@@ -4,9 +4,11 @@ package io.github.funkynoodles.classlookup;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -32,7 +34,7 @@ import io.github.funkynoodles.classlookup.models.CalendarYears;
 import io.github.funkynoodles.classlookup.models.Term;
 
 
-public class SchedulesFragment extends Fragment {
+public class SchedulesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     public static SchedulesFragment newInstance() {
         return new SchedulesFragment();
@@ -49,6 +51,11 @@ public class SchedulesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_schedules, container, false);
+    }
+
+    @Override
+    public void onRefresh(){
+        Toast.makeText(getActivity(), "Refresh", Toast.LENGTH_SHORT).show();
     }
 
     private class DownloadXmlTask extends AsyncTask<Void, Integer, CalendarYears>{
