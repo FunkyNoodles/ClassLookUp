@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Class Look Up</string>
+
+    <string name="textHome">Home</string>
+    <string name="textSettings">Settings</string>
+
+    <string name="textDownload">Download</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

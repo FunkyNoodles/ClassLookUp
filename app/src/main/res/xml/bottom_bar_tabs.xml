@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tabHome"
+        icon="@drawable/ic_home_white_24dp"
+        title="@string/textHome" />
+
+    <tab
+        id="@+id/tabSettings"
+        icon="@drawable/ic_menu_white_24dp"
+        title="@string/textSettings" />
+</tabs>
