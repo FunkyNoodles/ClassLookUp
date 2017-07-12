@@ -3,8 +3,11 @@
 
     <string name="textHome">Home</string>
     <string name="textSettings">Settings</string>
+    <string name="textSchedules">Schedules</string>
 
     <string name="textDownload">Download</string>
+
+    <string name="coursesApiRoot">https://courses.illinois.edu/cisapp/explorer/schedule.xml</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

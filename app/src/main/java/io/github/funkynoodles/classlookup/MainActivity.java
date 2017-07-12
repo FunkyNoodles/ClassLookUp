@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         BottomBar bottomBar = (BottomBar)findViewById(R.id.bottomBar);
-        bottomBar.selectTabAtPosition(0);
+        bottomBar.selectTabAtPosition(1);
         bottomBar.setOnTabSelectListener((new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
@@ -56,6 +56,18 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
 
+                    case R.id.tabSchedules:
+                        getSupportActionBar().setTitle(getString(R.string.textSchedules));
+                        fragment = fragmentManager.findFragmentByTag("Schedules Fragment");
+                        hideAllOtherFragments("Schedules Fragment");
+                        if(fragment != null){
+                            fragmentManager.beginTransaction().show(fragment).commit();
+                        }else{
+                            SchedulesFragment schedulesFragment = SchedulesFragment.newInstance();
+                            fragmentManager.beginTransaction().add(R.id.contentContainer, schedulesFragment, "Schedules Fragment").commit();
+                            activeFragments.add(schedulesFragment);
+                        }
+                        break;
                 }
             }
         }));
