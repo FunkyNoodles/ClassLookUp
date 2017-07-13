@@ -6,6 +6,7 @@
     <string name="textSchedules">Schedules</string>
 
     <string name="textDownload">Download</string>
+    <string name="textCancel">Cancel</string>
 
     <string name="textScheduleInstruction">Select a semester to download</string>
 

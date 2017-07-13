@@ -7,4 +7,7 @@
     <dimen name="schedulePadding">10dp</dimen>
 
     <dimen name="scheduleFetchYearsProgressSize">200dp</dimen>
+    <dimen name="scheduleDownloadProgressBarSize">170dp</dimen>
+
+    <dimen name="scheduleDownloadProgressTextSize">14sp</dimen>
 </resources>

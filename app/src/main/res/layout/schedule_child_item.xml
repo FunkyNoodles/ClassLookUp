@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/schedulePadding">
 
@@ -11,6 +13,35 @@
         android:layout_centerVertical="true"
         android:paddingStart="@dimen/scheduleTextPadding"
         android:paddingEnd="0dp"/>
+
+    <RelativeLayout
+        android:id="@+id/downloadingLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:visibility="gone">
+
+        <com.daimajia.numberprogressbar.NumberProgressBar
+            android:id="@+id/downloadProgress"
+            android:layout_width="@dimen/scheduleDownloadProgressBarSize"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/cancelButton"
+            android:layout_centerVertical="true"
+            android:paddingStart="0dp"
+            android:paddingEnd="@dimen/schedulePadding"
+            custom:progress_text_size="@dimen/scheduleDownloadProgressTextSize"
+            custom:progress_reached_color="@color/colorAccent"
+            custom:progress_text_color="@color/colorAccent"/>
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/textCancel"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
 
     <Button style="@style/Widget.AppCompat.Button.Colored"
         android:id="@+id/downloadButton"

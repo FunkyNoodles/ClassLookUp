@@ -9,8 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -46,6 +48,8 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
     private Activity context;
     private CalendarYears calendarYears = null;
 
+
+
     public CalendarYearsListAdapter(Activity context){
         this.context = context;
     }
@@ -73,13 +77,27 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
 
         TextView termText = (TextView)convertView.findViewById(R.id.termText);
         termText.setText(metaTerm.getText());
-        Button downloadButton = (Button)convertView.findViewById(R.id.downloadButton);
-        downloadButton.setOnClickListener(new View.OnClickListener() {
+        metaTerm.setDownloadButton((Button)convertView.findViewById(R.id.downloadButton));
+        metaTerm.getDownloadButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DownloadTermTask(metaTerm, context).execute();
+                metaTerm.setDownloadTermTask(new DownloadTermTask(metaTerm, context));
+                metaTerm.executeDownloadTermTask();
             }
         });
+
+        Button cancelDownloadButton = (Button)convertView.findViewById(R.id.cancelButton);
+        cancelDownloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                metaTerm.cancelDownloadTermTask();
+                metaTerm.getDownloadingLayout().setVisibility(View.GONE);
+                metaTerm.getDownloadButton().setVisibility(View.VISIBLE);
+            }
+        });
+
+        metaTerm.setDownloadProgress((NumberProgressBar)convertView.findViewById(R.id.downloadProgress));
+        metaTerm.setDownloadingLayout(convertView.findViewById(R.id.downloadingLayout));
 
         return convertView;
     }
@@ -139,13 +157,19 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
         this.calendarYears = calendarYears;
     }
 
-    private class DownloadTermTask extends AsyncTask<Void, Integer, Term>{
+    public class DownloadTermTask extends AsyncTask<Void, Integer, Term>{
         private MetaTerm metaTerm;
         private Activity context;
 
         DownloadTermTask(MetaTerm metaTerm, Activity context){
             this.metaTerm = metaTerm;
             this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute(){
+            metaTerm.getDownloadButton().setVisibility(View.GONE);
+            metaTerm.getDownloadingLayout().setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -164,6 +188,9 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
                 int responseCode = urlConnection.getResponseCode();
 
                 if(responseCode == HttpsURLConnection.HTTP_OK){
+                    if(isCancelled()){
+                        return null;
+                    }
                     String responseString = Utilities.readStream(urlConnection.getInputStream());
 
                     Document doc = dBuilder.parse(new InputSource(new StringReader(responseString)));
@@ -183,6 +210,9 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
                 }
 
                 for(Subject subject : term.getSubjects()){
+                    if(isCancelled()){
+                        return null;
+                    }
                     HttpsURLConnection subjectUrlConnection = (HttpsURLConnection)new URL(subject.getHref()).openConnection();
                     int subjectResponseCode = subjectUrlConnection.getResponseCode();
 
@@ -206,6 +236,9 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
                     }
                     subjectUrlConnection.disconnect();
                     for(Course course : subject.getCourses()){
+                        if(isCancelled()){
+                            return null;
+                        }
                         HttpsURLConnection courseUrlConnection = (HttpsURLConnection)new URL(course.getHref()).openConnection();
                         int courseResponseCode = courseUrlConnection.getResponseCode();
 
@@ -233,6 +266,9 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
                         courseUrlConnection.disconnect();
 
                         for(Section section : course.getSections()){
+                            if(isCancelled()){
+                                return null;
+                            }
                             HttpsURLConnection sectionUrlConnection = (HttpsURLConnection)new URL(section.getHref()).openConnection();
                             int sectionResponseCode = sectionUrlConnection.getResponseCode();
 
@@ -252,14 +288,21 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
                             }else{
                                 return null;
                             }
+                            sectionUrlConnection.disconnect();
                         }
                     }
+                }
+                if(isCancelled()){
+                    return null;
                 }
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 String termJson = gson.toJson(term);
                 String fileName = term.getLabel() + ".json";
                 FileOutputStream outputStream;
 
+                if(isCancelled()){
+                    return null;
+                }
                 outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
                 outputStream.write(termJson.getBytes());
                 outputStream.close();
