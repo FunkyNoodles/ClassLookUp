@@ -8,6 +8,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import org.w3c.dom.Document;
@@ -22,19 +23,20 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import io.github.funkynoodles.classlookup.adpaters.CalendarYearsListAdapter;
 import io.github.funkynoodles.classlookup.models.CalendarYear;
 import io.github.funkynoodles.classlookup.models.CalendarYears;
 import io.github.funkynoodles.classlookup.models.Term;
 
 
 public class SchedulesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+
+    private ExpandableListView calendarYearsListView;
 
     public static SchedulesFragment newInstance() {
         return new SchedulesFragment();
@@ -50,7 +52,9 @@ public class SchedulesFragment extends Fragment implements SwipeRefreshLayout.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_schedules, container, false);
+        View view = inflater.inflate(R.layout.fragment_schedules, container, false);
+        calendarYearsListView = (ExpandableListView)view.findViewById(R.id.calendarYearsList);
+        return view;
     }
 
     @Override
@@ -146,6 +150,8 @@ public class SchedulesFragment extends Fragment implements SwipeRefreshLayout.On
 
         @Override
         protected void onPostExecute(CalendarYears calendarYears){
+            final CalendarYearsListAdapter adapter = new CalendarYearsListAdapter(getActivity(), calendarYears);
+            calendarYearsListView.setAdapter(adapter);
             for(CalendarYear calendarYear : calendarYears.getYears()){
                 System.out.println(calendarYear.getYear());
                 for(Term term : calendarYear.getTerms()){

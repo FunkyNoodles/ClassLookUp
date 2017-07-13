@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="io.github.funkynoodles.classlookup.SchedulesFragment">
+    
+        <ExpandableListView
+            android:id="@+id/calendarYearsList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <ExpandableListView
-        android:id="@+id/yearList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </ExpandableListView>
+        </ExpandableListView>
 
 </android.support.v4.widget.SwipeRefreshLayout>

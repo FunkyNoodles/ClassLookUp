@@ -7,6 +7,8 @@
 
     <string name="textDownload">Download</string>
 
+    <string name="textScheduleInstruction">Select a semester to download</string>
+
     <string name="coursesApiRoot">https://courses.illinois.edu/cisapp/explorer/schedule.xml</string>
 
     <!-- TODO: Remove or change this placeholder text -->
