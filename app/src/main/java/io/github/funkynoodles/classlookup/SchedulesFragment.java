@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.Toast;
 
 import com.github.lzyzsd.circleprogress.ArcProgress;
 
@@ -30,7 +29,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import io.github.funkynoodles.classlookup.adpaters.CalendarYearsListAdapter;
+import io.github.funkynoodles.classlookup.adapters.CalendarYearsListAdapter;
 import io.github.funkynoodles.classlookup.models.CalendarYear;
 import io.github.funkynoodles.classlookup.models.CalendarYears;
 import io.github.funkynoodles.classlookup.models.Term;
@@ -41,6 +40,7 @@ public class SchedulesFragment extends Fragment{
     private ExpandableListView calendarYearsListView;
     private ArcProgress fetchYearsProgress;
     private SwipeRefreshLayout refreshLayout;
+    private CalendarYearsListAdapter adapter;
 
     public static SchedulesFragment newInstance() {
         return new SchedulesFragment();
@@ -49,6 +49,8 @@ public class SchedulesFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        adapter = new CalendarYearsListAdapter(getActivity());
+
         new DownloadXmlTask(getString(R.string.coursesApiRoot)).execute();
     }
 
@@ -64,7 +66,10 @@ public class SchedulesFragment extends Fragment{
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
+                calendarYearsListView.setVisibility(View.INVISIBLE);
+                fetchYearsProgress.setProgress(0);
+                fetchYearsProgress.setVisibility(View.VISIBLE);
+                new DownloadXmlTask(getString(R.string.coursesApiRoot)).execute();
             }
         });
         return view;
@@ -159,16 +164,16 @@ public class SchedulesFragment extends Fragment{
 
         @Override
         protected void onPostExecute(CalendarYears calendarYears){
-            final CalendarYearsListAdapter adapter = new CalendarYearsListAdapter(getActivity(), calendarYears);
-            calendarYearsListView.setAdapter(adapter);
+            adapter.clear();
+            adapter.setCalendarYears(calendarYears);
+            if(calendarYearsListView.getAdapter() == null){
+                calendarYearsListView.setAdapter(adapter);
+            }
+            calendarYearsListView.setVisibility(View.VISIBLE);
+            adapter.notifyDataSetChanged();
             fetchYearsProgress.setVisibility(View.GONE);
             refreshLayout.setVisibility(View.VISIBLE);
-            for(CalendarYear calendarYear : calendarYears.getYears()){
-                System.out.println(calendarYear.getYear());
-                for(Term term : calendarYear.getTerms()){
-                    System.out.println("\t" + term.getText());
-                }
-            }
+            refreshLayout.setRefreshing(false);
         }
     }
 

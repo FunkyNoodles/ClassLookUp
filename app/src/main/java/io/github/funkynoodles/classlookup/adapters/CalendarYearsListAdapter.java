@@ -1,4 +1,4 @@
-package io.github.funkynoodles.classlookup.adpaters;
+package io.github.funkynoodles.classlookup.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,11 +17,10 @@ import io.github.funkynoodles.classlookup.models.Term;
 public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
 
     private Activity context;
-    private CalendarYears calendarYears;
+    private CalendarYears calendarYears = null;
 
-    public CalendarYearsListAdapter(Activity context, CalendarYears calendarYears) {
+    public CalendarYearsListAdapter(Activity context){
         this.context = context;
-        this.calendarYears = calendarYears;
     }
 
     @Override
@@ -94,5 +93,15 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition){
         return true;
+    }
+
+    public void clear(){
+        if(this.calendarYears != null) {
+            this.calendarYears.getYears().clear();
+        }
+    }
+
+    public void setCalendarYears(CalendarYears calendarYears){
+        this.calendarYears = calendarYears;
     }
 }

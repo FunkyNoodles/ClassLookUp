@@ -9,6 +9,7 @@
         <item name="android:listDivider">@color/colorDivider</item>
         <item name="android:headerDividersEnabled">true</item>
         <item name="android:dividerHeight">1dp</item>
+        <!--<item name="android:windowBackground"></item>-->
     </style>
 
 </resources>

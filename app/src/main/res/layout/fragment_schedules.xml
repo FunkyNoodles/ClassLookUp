@@ -2,12 +2,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     tools:context="io.github.funkynoodles.classlookup.SchedulesFragment">
 
     <com.github.lzyzsd.circleprogress.ArcProgress
         android:id="@+id/fetchYearsProgress"
         android:layout_width="@dimen/scheduleFetchYearsProgressSize"
         android:layout_height="@dimen/scheduleFetchYearsProgressSize"
+        custom:arc_finished_color="@color/colorAccent"
+        custom:arc_unfinished_color="@color/colorWindowBackground"
+        custom:arc_text_color="@color/colorAccent"
         android:layout_gravity="center">
 
     </com.github.lzyzsd.circleprogress.ArcProgress>
