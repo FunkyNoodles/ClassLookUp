@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import com.github.lzyzsd.circleprogress.ArcProgress;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -34,9 +36,11 @@ import io.github.funkynoodles.classlookup.models.CalendarYears;
 import io.github.funkynoodles.classlookup.models.Term;
 
 
-public class SchedulesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class SchedulesFragment extends Fragment{
 
     private ExpandableListView calendarYearsListView;
+    private ArcProgress fetchYearsProgress;
+    private SwipeRefreshLayout refreshLayout;
 
     public static SchedulesFragment newInstance() {
         return new SchedulesFragment();
@@ -54,12 +58,16 @@ public class SchedulesFragment extends Fragment implements SwipeRefreshLayout.On
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_schedules, container, false);
         calendarYearsListView = (ExpandableListView)view.findViewById(R.id.calendarYearsList);
-        return view;
-    }
+        fetchYearsProgress = (ArcProgress)view.findViewById(R.id.fetchYearsProgress);
+        refreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.schedulesSwipeRefresh);
 
-    @Override
-    public void onRefresh(){
-        Toast.makeText(getActivity(), "Refresh", Toast.LENGTH_SHORT).show();
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+            }
+        });
+        return view;
     }
 
     private class DownloadXmlTask extends AsyncTask<Void, Integer, CalendarYears>{
@@ -106,7 +114,8 @@ public class SchedulesFragment extends Fragment implements SwipeRefreshLayout.On
                 int progress;
                 for(int i = 0; i < calendarYears.getYears().size(); ++i){
                     CalendarYear calendarYear = calendarYears.getYears().get(i);
-                    progress = (int)(float)i / calendarYears.getYears().size() * 100;
+                    progress = (int)((float)i / calendarYears.getYears().size() * 100);
+                    System.out.println(progress);
                     publishProgress(progress);
                     String href = calendarYear.getHref();
                     URL termUrl = new URL(href);
@@ -145,13 +154,15 @@ public class SchedulesFragment extends Fragment implements SwipeRefreshLayout.On
 
         @Override
         protected void onProgressUpdate(Integer... progress){
-
+            fetchYearsProgress.setProgress(progress[0]);
         }
 
         @Override
         protected void onPostExecute(CalendarYears calendarYears){
             final CalendarYearsListAdapter adapter = new CalendarYearsListAdapter(getActivity(), calendarYears);
             calendarYearsListView.setAdapter(adapter);
+            fetchYearsProgress.setVisibility(View.GONE);
+            refreshLayout.setVisibility(View.VISIBLE);
             for(CalendarYear calendarYear : calendarYears.getYears()){
                 System.out.println(calendarYear.getYear());
                 for(Term term : calendarYear.getTerms()){
@@ -166,7 +177,7 @@ public class SchedulesFragment extends Fragment implements SwipeRefreshLayout.On
         StringBuffer response = new StringBuffer();
         try {
             reader = new BufferedReader(new InputStreamReader(in));
-            String line = "";
+            String line;
             while ((line = reader.readLine()) != null) {
                 response.append(line);
             }

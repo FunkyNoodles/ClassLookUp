@@ -1,11 +1,23 @@
-<android.support.v4.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/schedulesSwipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="io.github.funkynoodles.classlookup.SchedulesFragment">
-    
+
+    <com.github.lzyzsd.circleprogress.ArcProgress
+        android:id="@+id/fetchYearsProgress"
+        android:layout_width="@dimen/scheduleFetchYearsProgressSize"
+        android:layout_height="@dimen/scheduleFetchYearsProgressSize"
+        android:layout_gravity="center">
+
+    </com.github.lzyzsd.circleprogress.ArcProgress>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/schedulesSwipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
         <ExpandableListView
             android:id="@+id/calendarYearsList"
             android:layout_width="match_parent"
@@ -13,4 +25,7 @@
 
         </ExpandableListView>
 
-</android.support.v4.widget.SwipeRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+</FrameLayout>
