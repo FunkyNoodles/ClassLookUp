@@ -1,14 +1,18 @@
 package io.github.funkynoodles.classlookup.models;
 
-public class Term {
-    private String id;
-    private String href;
-    private String text;
+import java.util.ArrayList;
+import java.util.List;
 
-    public Term(String id, String href, String text){
+public class Term {
+
+    private String id;
+    private String label;
+    private List<Subject> subjects;
+
+    public Term(String id, String label){
         this.id = id;
-        this.href = href;
-        this.text = text;
+        this.label = label;
+        subjects = new ArrayList<>();
     }
 
     public String getId() {
@@ -19,19 +23,19 @@ public class Term {
         this.id = id;
     }
 
-    public String getHref() {
-        return href;
+    public String getLabel() {
+        return label;
     }
 
-    public void setHref(String href) {
-        this.href = href;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
-    public String getText() {
-        return text;
+    public List<Subject> getSubjects() {
+        return subjects;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void insertSubject(Subject subject){
+        subjects.add(subject);
     }
 }

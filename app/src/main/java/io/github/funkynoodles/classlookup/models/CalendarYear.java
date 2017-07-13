@@ -6,12 +6,12 @@ import java.util.List;
 public class CalendarYear {
     private String year;
     private String href;
-    private List<Term> terms;
+    private List<MetaTerm> metaTerms;
 
     public CalendarYear(String year, String href){
         this.year = year;
         this.href = href;
-        terms = new ArrayList<>();
+        metaTerms = new ArrayList<>();
     }
 
     public String getYear() {
@@ -30,11 +30,11 @@ public class CalendarYear {
         this.href = href;
     }
 
-    public List<Term> getTerms() {
-        return terms;
+    public List<MetaTerm> getMetaTerms() {
+        return metaTerms;
     }
 
-    public void insertTerm(Term term){
-        terms.add(term);
+    public void insertTerm(MetaTerm metaTerm){
+        metaTerms.add(metaTerm);
     }
 }

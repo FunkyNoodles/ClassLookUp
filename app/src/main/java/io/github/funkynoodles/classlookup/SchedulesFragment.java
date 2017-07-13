@@ -17,12 +17,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -30,9 +25,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import io.github.funkynoodles.classlookup.adapters.CalendarYearsListAdapter;
+import io.github.funkynoodles.classlookup.helpers.Utilities;
 import io.github.funkynoodles.classlookup.models.CalendarYear;
 import io.github.funkynoodles.classlookup.models.CalendarYears;
-import io.github.funkynoodles.classlookup.models.Term;
+import io.github.funkynoodles.classlookup.models.MetaTerm;
 
 
 public class SchedulesFragment extends Fragment{
@@ -95,8 +91,8 @@ public class SchedulesFragment extends Fragment{
                 int responseCode = urlConnection.getResponseCode();
                 CalendarYears calendarYears = new CalendarYears();
 
-                if(responseCode == HttpURLConnection.HTTP_OK){
-                    String responseString = readStream(urlConnection.getInputStream());
+                if(responseCode == HttpsURLConnection.HTTP_OK){
+                    String responseString = Utilities.readStream(urlConnection.getInputStream());
 
                     DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
                     DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -127,8 +123,8 @@ public class SchedulesFragment extends Fragment{
                     HttpsURLConnection termUrlConnection = (HttpsURLConnection)termUrl.openConnection();
 
                     int termResponseCode = termUrlConnection.getResponseCode();
-                    if(termResponseCode == HttpURLConnection.HTTP_OK){
-                        String responseString = readStream(termUrlConnection.getInputStream());
+                    if(termResponseCode == HttpsURLConnection.HTTP_OK){
+                        String responseString = Utilities.readStream(termUrlConnection.getInputStream());
 
                         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
                         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -138,7 +134,7 @@ public class SchedulesFragment extends Fragment{
                         NodeList termsNodes = doc.getDocumentElement().getElementsByTagName("term");
                         for(int j = 0; j < termsNodes.getLength(); ++j){
                             Node node = termsNodes.item(j);
-                            calendarYear.insertTerm(new Term(
+                            calendarYear.insertTerm(new MetaTerm(
                                     node.getAttributes().getNamedItem("id").getNodeValue(),
                                     node.getAttributes().getNamedItem("href").getNodeValue(),
                                     node.getTextContent()
@@ -175,28 +171,5 @@ public class SchedulesFragment extends Fragment{
             refreshLayout.setVisibility(View.VISIBLE);
             refreshLayout.setRefreshing(false);
         }
-    }
-
-    private String readStream(InputStream in) {
-        BufferedReader reader = null;
-        StringBuffer response = new StringBuffer();
-        try {
-            reader = new BufferedReader(new InputStreamReader(in));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return response.toString();
     }
 }
