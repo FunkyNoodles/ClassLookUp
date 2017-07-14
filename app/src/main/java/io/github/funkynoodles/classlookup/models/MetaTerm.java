@@ -5,9 +5,12 @@ import android.widget.Button;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
 
-import io.github.funkynoodles.classlookup.adapters.CalendarYearsListAdapter;
+import java.io.Serializable;
 
-public class MetaTerm {
+import io.github.funkynoodles.classlookup.adapters.CalendarYearsListAdapter;
+import io.github.funkynoodles.classlookup.tasks.DownloadTermTask;
+
+public class MetaTerm implements Serializable{
     private String id;
     private String href;
     private String text;
@@ -15,7 +18,7 @@ public class MetaTerm {
     private Button downloadButton;
     private Button downloadedButton;
     private View downloadingLayout;
-    private CalendarYearsListAdapter.DownloadTermTask downloadTermTask = null;
+    private DownloadTermTask downloadTermTask = null;
 
     public MetaTerm(String id, String href, String text){
         this.id = id;
@@ -90,7 +93,7 @@ public class MetaTerm {
         }
     }
 
-    public void setDownloadTermTask(CalendarYearsListAdapter.DownloadTermTask downloadTermTask) {
+    public void setDownloadTermTask(DownloadTermTask downloadTermTask) {
         if(this.downloadTermTask == null) {
             this.downloadTermTask = downloadTermTask;
         }
