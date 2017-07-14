@@ -116,7 +116,6 @@ public class SchedulesFragment extends Fragment{
                 for(int i = 0; i < calendarYears.getYears().size(); ++i){
                     CalendarYear calendarYear = calendarYears.getYears().get(i);
                     progress = (int)((float)i / calendarYears.getYears().size() * 100);
-                    System.out.println(progress);
                     publishProgress(progress);
                     String href = calendarYear.getHref();
                     URL termUrl = new URL(href);

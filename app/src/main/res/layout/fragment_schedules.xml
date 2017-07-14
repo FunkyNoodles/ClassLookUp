@@ -12,6 +12,8 @@
         custom:arc_finished_color="@color/colorAccent"
         custom:arc_unfinished_color="@color/colorWindowBackground"
         custom:arc_text_color="@color/colorAccent"
+        custom:arc_bottom_text="@string/textFetching"
+        custom:arc_bottom_text_size="@dimen/scheduleFetchingTextSize"
         android:layout_gravity="center">
 
     </com.github.lzyzsd.circleprogress.ArcProgress>

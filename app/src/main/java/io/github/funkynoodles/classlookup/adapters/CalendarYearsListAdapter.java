@@ -177,6 +177,7 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
             URL url;
             HttpsURLConnection urlConnection = null;
             Term term = new Term(metaTerm.getId(), metaTerm.getText());
+            double progressTotal = 0;
 
             try {
                 url = new URL(metaTerm.getHref());
@@ -209,10 +210,12 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
                     return null;
                 }
 
-                for(Subject subject : term.getSubjects()){
+                int subjectNum = term.getSubjects().size();
+                for(int subjectIndex = 0; subjectIndex < subjectNum; ++subjectIndex){
                     if(isCancelled()){
                         return null;
                     }
+                    Subject subject = term.getSubjects().get(subjectIndex);
                     HttpsURLConnection subjectUrlConnection = (HttpsURLConnection)new URL(subject.getHref()).openConnection();
                     int subjectResponseCode = subjectUrlConnection.getResponseCode();
 
@@ -235,10 +238,15 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
                         return null;
                     }
                     subjectUrlConnection.disconnect();
-                    for(Course course : subject.getCourses()){
+
+                    progressTotal = (subjectIndex + 1) / (double)subjectNum;
+                    System.out.println(progressTotal);
+                    int courseNum = subject.getCourses().size();
+                    for(int courseIndex = 0; courseIndex < courseNum; ++courseIndex){
                         if(isCancelled()){
                             return null;
                         }
+                        Course course = subject.getCourses().get(courseIndex);
                         HttpsURLConnection courseUrlConnection = (HttpsURLConnection)new URL(course.getHref()).openConnection();
                         int courseResponseCode = courseUrlConnection.getResponseCode();
 
@@ -248,8 +256,14 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
                             Document courseDoc = dBuilder.parse(new InputSource(new StringReader(courseResponseString)));
                             courseDoc.getDocumentElement().normalize();
 
-                            course.setDescription(courseDoc.getElementsByTagName("description").item(0).getTextContent());
-                            course.setCreditHours(courseDoc.getElementsByTagName("creditHours").item(0).getTextContent());
+                            NodeList descriptions = courseDoc.getElementsByTagName("description");
+                            if(descriptions.getLength() != 0) {
+                                course.setDescription(descriptions.item(0).getTextContent());
+                            }
+                            NodeList creditHours =  courseDoc.getElementsByTagName("creditHours");
+                            if(creditHours.getLength() != 0) {
+                                course.setCreditHours(creditHours.item(0).getTextContent());
+                            }
 
                             NodeList sectionNodes = courseDoc.getDocumentElement().getElementsByTagName("section");
                             for(int i = 0; i < sectionNodes.getLength(); ++i){
@@ -265,10 +279,16 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
                         }
                         courseUrlConnection.disconnect();
 
-                        for(Section section : course.getSections()){
+                        double progressCourse = (1.0 / courseNum) / (double)subjectNum;
+                        progressTotal += progressCourse;
+                        System.out.println("\t" + progressTotal);
+                        publishProgress((int)(progressTotal * 100.0));
+                        int sectionNum = course.getSections().size();
+                        for(int sectionIndex = 0; sectionIndex < sectionNum; ++sectionIndex){
                             if(isCancelled()){
                                 return null;
                             }
+                            Section section = course.getSections().get(sectionIndex);
                             HttpsURLConnection sectionUrlConnection = (HttpsURLConnection)new URL(section.getHref()).openConnection();
                             int sectionResponseCode = sectionUrlConnection.getResponseCode();
 
@@ -281,10 +301,16 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
                                 //section.setSectionText(sectionDoc.getElementsByTagName("sectionText").item(0).getNodeValue());
                                 //section.setSectionNotes(sectionDoc.getElementsByTagName("sectionNotes").item(0).getNodeValue());
                                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm", Locale.ENGLISH);
-                                Date startDate = format.parse(sectionDoc.getElementsByTagName("startDate").item(0).getTextContent());
+                                NodeList startDates = sectionDoc.getElementsByTagName("startDate");
+                                if (startDates.getLength() == 0){
+                                    // There is no start or end dates
+                                    continue;
+                                }
+                                Date startDate = format.parse(startDates.item(0).getTextContent());
                                 Date endDate = format.parse(sectionDoc.getElementsByTagName("endDate").item(0).getTextContent());
                                 section.setStartDate(startDate);
                                 section.setEndDate(endDate);
+
                             }else{
                                 return null;
                             }
@@ -318,6 +344,7 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
 
         @Override
         protected void onProgressUpdate(Integer... progress){
+            metaTerm.getDownloadProgress().setProgress(progress[0]);
         }
 
         @Override
@@ -325,7 +352,7 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
             if(term == null){
                 return;
             }
-
+            metaTerm.getDownloadingLayout().setVisibility(View.GONE);
         }
     }
 }
