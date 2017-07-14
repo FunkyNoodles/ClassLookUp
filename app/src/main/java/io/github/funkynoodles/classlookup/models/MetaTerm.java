@@ -13,6 +13,7 @@ public class MetaTerm {
     private String text;
     private NumberProgressBar downloadProgress;
     private Button downloadButton;
+    private Button downloadedButton;
     private View downloadingLayout;
     private CalendarYearsListAdapter.DownloadTermTask downloadTermTask = null;
 
@@ -60,6 +61,14 @@ public class MetaTerm {
 
     public void setDownloadButton(Button downloadButton) {
         this.downloadButton = downloadButton;
+    }
+
+    public Button getDownloadedButton() {
+        return downloadedButton;
+    }
+
+    public void setDownloadedButton(Button downloadedButton) {
+        this.downloadedButton = downloadedButton;
     }
 
     public View getDownloadingLayout() {

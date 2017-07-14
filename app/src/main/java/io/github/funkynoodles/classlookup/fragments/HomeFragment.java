@@ -1,4 +1,4 @@
-package io.github.funkynoodles.classlookup;
+package io.github.funkynoodles.classlookup.fragments;
 
 
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import io.github.funkynoodles.classlookup.R;
 
 
 public class HomeFragment extends Fragment {

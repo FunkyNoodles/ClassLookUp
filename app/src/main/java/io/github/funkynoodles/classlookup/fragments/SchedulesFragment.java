@@ -1,4 +1,4 @@
-package io.github.funkynoodles.classlookup;
+package io.github.funkynoodles.classlookup.fragments;
 
 
 import android.os.AsyncTask;
@@ -24,6 +24,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import io.github.funkynoodles.classlookup.R;
 import io.github.funkynoodles.classlookup.adapters.CalendarYearsListAdapter;
 import io.github.funkynoodles.classlookup.helpers.Utilities;
 import io.github.funkynoodles.classlookup.models.CalendarYear;

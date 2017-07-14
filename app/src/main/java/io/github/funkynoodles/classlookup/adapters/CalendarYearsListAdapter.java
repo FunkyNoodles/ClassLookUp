@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
@@ -21,12 +21,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -47,11 +50,17 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
 
     private Activity context;
     private CalendarYears calendarYears = null;
-
-
+    private List<String> fileNames;
 
     public CalendarYearsListAdapter(Activity context){
         this.context = context;
+        fileNames = new ArrayList<>();
+        File file = context.getFilesDir();
+        for (File f : file.listFiles()){
+            if(f.isFile()){
+                fileNames.add(f.getName());
+            }
+        }
     }
 
     @Override
@@ -86,6 +95,14 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
             }
         });
 
+        metaTerm.setDownloadedButton((Button)convertView.findViewById(R.id.downloadedButton));
+        metaTerm.getDownloadedButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+        context.registerForContextMenu(metaTerm.getDownloadedButton());
+
         Button cancelDownloadButton = (Button)convertView.findViewById(R.id.cancelButton);
         cancelDownloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +115,13 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
 
         metaTerm.setDownloadProgress((NumberProgressBar)convertView.findViewById(R.id.downloadProgress));
         metaTerm.setDownloadingLayout(convertView.findViewById(R.id.downloadingLayout));
+
+        String fileString = metaTerm.getText() + ".json";
+        if(fileNames.contains(fileString)){
+            // If the file has been downloaded before
+            metaTerm.getDownloadButton().setVisibility(View.GONE);
+            metaTerm.getDownloadedButton().setVisibility(View.VISIBLE);
+        }
 
         return convertView;
     }
@@ -332,6 +356,7 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
                 outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
                 outputStream.write(termJson.getBytes());
                 outputStream.close();
+                return term;
             }catch (Exception e){
                 e.printStackTrace();
             }finally {
@@ -353,6 +378,7 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
                 return;
             }
             metaTerm.getDownloadingLayout().setVisibility(View.GONE);
+            metaTerm.getDownloadedButton().setVisibility(View.VISIBLE);
         }
     }
 }

@@ -1,4 +1,4 @@
-package io.github.funkynoodles.classlookup;
+package io.github.funkynoodles.classlookup.activities;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -11,6 +11,11 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.github.funkynoodles.classlookup.R;
+import io.github.funkynoodles.classlookup.fragments.HomeFragment;
+import io.github.funkynoodles.classlookup.fragments.SchedulesFragment;
+import io.github.funkynoodles.classlookup.fragments.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity {
 
