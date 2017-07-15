@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -27,6 +28,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import io.github.funkynoodles.classlookup.helpers.Utilities;
 import io.github.funkynoodles.classlookup.models.Course;
+import io.github.funkynoodles.classlookup.models.Meeting;
 import io.github.funkynoodles.classlookup.models.MetaTerm;
 import io.github.funkynoodles.classlookup.models.Section;
 import io.github.funkynoodles.classlookup.models.Subject;
@@ -185,6 +187,44 @@ public class DownloadTermTask extends AsyncTask<Void, Integer, Term> {
                             Date endDate = format.parse(sectionDoc.getElementsByTagName("endDate").item(0).getTextContent());
                             section.setStartDate(startDate);
                             section.setEndDate(endDate);
+
+                            NodeList meetingsNodes = sectionDoc.getElementsByTagName("meeting");
+                            for(int i = 0; i < meetingsNodes.getLength(); ++i){
+                                Element element = (Element)meetingsNodes.item(i);
+                                String id = element.getAttributes().getNamedItem("id").getNodeValue();
+                                Meeting meeting = new Meeting(id);
+                                NodeList typeNodeList = element.getElementsByTagName("type");
+                                if(typeNodeList.getLength() > 0){
+                                    Node typeNode = typeNodeList.item(0);
+                                    meeting.setType(typeNode.getTextContent());
+                                    meeting.setTypeCode(typeNode.getAttributes().getNamedItem("code").getNodeValue());
+                                }
+                                NodeList startNodeList = element.getElementsByTagName("start");
+                                NodeList endNodeList = element.getElementsByTagName("end");
+                                if(startNodeList.getLength() > 0 && endNodeList.getLength() > 0){
+                                    DateFormat timeFormat = new SimpleDateFormat("KK:mm aa", Locale.ENGLISH);
+                                    Date startTime = timeFormat.parse(startNodeList.item(0).getTextContent());
+                                    Date endTime = timeFormat.parse(endNodeList.item(0).getTextContent());
+                                    meeting.setStartTime(startTime);
+                                    meeting.setEndTime(endTime);
+                                }
+                                NodeList daysNodeList = element.getElementsByTagName("daysOfTheWeek");
+                                if(daysNodeList.getLength() > 0){
+                                    meeting.setDaysOfTheWeek(daysNodeList.item(0).getTextContent());
+                                }
+                                NodeList roomNodeList = element.getElementsByTagName("roomNumber");
+                                if(roomNodeList.getLength() > 0){
+                                    meeting.setRoomNumber(roomNodeList.item(0).getTextContent());
+                                }
+                                NodeList buildingNodeList = element.getElementsByTagName("buildingName");
+                                if(buildingNodeList.getLength() > 0){
+                                    meeting.setBuildingName(buildingNodeList.item(0).getTextContent());
+                                }
+                                NodeList instructorNodeList = element.getElementsByTagName("instructor");
+                                for(int j = 0; j < instructorNodeList.getLength(); ++j){
+                                    meeting.insertInstructor(instructorNodeList.item(j).getTextContent());
+                                }
+                            }
 
                         }else{
                             return null;

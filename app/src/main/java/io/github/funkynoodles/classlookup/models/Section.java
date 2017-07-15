@@ -1,6 +1,8 @@
 package io.github.funkynoodles.classlookup.models;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Section {
 
@@ -11,11 +13,13 @@ public class Section {
     private String sectionNotes;
     private Date startDate;
     private Date endDate;
+    private List<Meeting> meetings;
 
     public Section(String id, String href, String sectionNumber){
         this.id = id;
         this.href = href;
         this.sectionNumber = sectionNumber;
+        meetings = new ArrayList<>();
     }
 
     public String getId() {
@@ -72,5 +76,13 @@ public class Section {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public void insertMeeting(Meeting meeting){
+        meetings.add(meeting);
+    }
+
+    public List<Meeting> getMeetings() {
+        return meetings;
     }
 }
