@@ -16,6 +16,9 @@
 
     <RelativeLayout
         android:id="@+id/downloadingLayout"
+        android:layout_toEndOf="@+id/termText"
+        android:paddingStart="@dimen/schedulePadding"
+        android:paddingEnd="0dp"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
@@ -23,7 +26,7 @@
 
         <com.daimajia.numberprogressbar.NumberProgressBar
             android:id="@+id/downloadProgress"
-            android:layout_width="@dimen/scheduleDownloadProgressBarSize"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@+id/cancelButton"
             android:layout_centerVertical="true"
