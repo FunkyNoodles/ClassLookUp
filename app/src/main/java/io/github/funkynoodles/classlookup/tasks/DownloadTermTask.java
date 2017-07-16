@@ -175,8 +175,25 @@ public class DownloadTermTask extends AsyncTask<Void, Integer, Term> {
                             Document sectionDoc = dBuilder.parse(new InputSource(new StringReader(sectionResponseString)));
                             sectionDoc.getDocumentElement().normalize();
 
-                            //section.setSectionText(sectionDoc.getElementsByTagName("sectionText").item(0).getNodeValue());
-                            //section.setSectionNotes(sectionDoc.getElementsByTagName("sectionNotes").item(0).getNodeValue());
+                            NodeList parentTermNodeList = sectionDoc.getElementsByTagName("term");
+                            if(parentTermNodeList.getLength() > 0){
+                                section.setTerm(parentTermNodeList.item(0).getTextContent());
+                            }
+
+                            NodeList parentSubjectNodeList = sectionDoc.getElementsByTagName("subject");
+                            if(parentSubjectNodeList.getLength() > 0){
+                                Node node = parentSubjectNodeList.item(0);
+                                section.setSubject(node.getTextContent());
+                                section.setSubjectId(node.getAttributes().getNamedItem("id").getNodeValue());
+                            }
+
+                            NodeList parentCourseNodeList = sectionDoc.getElementsByTagName("course");
+                            if(parentCourseNodeList.getLength() > 0){
+                                Node node = parentCourseNodeList.item(0);
+                                section.setCourse(node.getTextContent());
+                                section.setCourseId(node.getAttributes().getNamedItem("id").getNodeValue());
+                            }
+
                             DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm", Locale.ENGLISH);
                             NodeList startDates = sectionDoc.getElementsByTagName("startDate");
                             if (startDates.getLength() == 0){

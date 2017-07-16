@@ -15,6 +15,12 @@ public class Section {
     private Date endDate;
     private List<Meeting> meetings;
 
+    private String term;
+    private String subject;
+    private String subjectId;
+    private String course;
+    private String courseId;
+
     public Section(String id, String href, String sectionNumber){
         this.id = id;
         this.href = href;
@@ -78,11 +84,51 @@ public class Section {
         this.endDate = endDate;
     }
 
-    public void insertMeeting(Meeting meeting){
+    public void insertMeeting(Meeting meeting) {
         meetings.add(meeting);
     }
 
     public List<Meeting> getMeetings() {
         return meetings;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(String subjectId) {
+        this.subjectId = subjectId;
+    }
+
+    public String getCourse() {
+        return course;
+    }
+
+    public void setCourse(String course) {
+        this.course = course;
+    }
+
+    public String getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
     }
 }
