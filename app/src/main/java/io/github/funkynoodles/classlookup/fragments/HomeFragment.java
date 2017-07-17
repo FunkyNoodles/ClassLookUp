@@ -1,33 +1,27 @@
 package io.github.funkynoodles.classlookup.fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 
-import org.joda.time.DateTime;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.github.funkynoodles.classlookup.R;
-import io.github.funkynoodles.classlookup.gsonconverters.DateTimeConverter;
-import io.github.funkynoodles.classlookup.lookup.SearchIndex;
-import io.github.funkynoodles.classlookup.models.Section;
-import io.github.funkynoodles.classlookup.models.Term;
-
+import io.github.funkynoodles.classlookup.adapters.TermSpinnerAdapter;
 
 public class HomeFragment extends Fragment {
+
+    private TermSpinnerAdapter termAdapter;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -36,8 +30,18 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
+
+        List<String> fileNames = new ArrayList<>();
+        File file = getContext().getDir("schedules", Context.MODE_PRIVATE);
+        if (!file.exists()) {
+            return;
         }
+        for (File f : file.listFiles()) {
+            if (f.isFile()) {
+                fileNames.add(f.getName());
+            }
+        }
+        termAdapter = new TermSpinnerAdapter(getContext(), fileNames);
     }
 
     @Override
@@ -45,10 +49,6 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        Button testButton = (Button)view.findViewById(R.id.testButton);
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 //                String filePath = getActivity().getFilesDir() + "/" + "Summer 2017.json";
 //                try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
 //
@@ -68,8 +68,20 @@ public class HomeFragment extends Fragment {
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }
+        MaterialBetterSpinner termSpinner = (MaterialBetterSpinner)view.findViewById(R.id.termSpinner);
+        termSpinner.setAdapter(termAdapter);
+        termSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
+
         return view;
     }
 
