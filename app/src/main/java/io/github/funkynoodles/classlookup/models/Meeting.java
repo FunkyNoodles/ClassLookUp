@@ -1,22 +1,28 @@
 package io.github.funkynoodles.classlookup.models;
 
+import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Meeting {
 
+    private final static String[] daysOfWeekTranslation = {
+            "", "M", "T", "W", "R", "F"
+    };
+
     private String id;
     private String type;
     private String typeCode;
-    private Date startTime;
-    private Date endTime;
+    private DateTime startTime;
+    private DateTime endTime;
     private String daysOfTheWeek;
     private String roomNumber;
     private String buildingName;
     private List<String> instructors;
 
-    public Meeting(String id){
+    public Meeting(String id) {
         this.id = id;
         instructors = new ArrayList<>();
     }
@@ -45,19 +51,19 @@ public class Meeting {
         this.typeCode = typeCode;
     }
 
-    public Date getStartTime() {
+    public DateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(DateTime startTime) {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
+    public DateTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(DateTime endTime) {
         this.endTime = endTime;
     }
 
@@ -90,6 +96,16 @@ public class Meeting {
     }
 
     public void insertInstructor(String instructor) {
-        this.instructors.add(instructor);;
+        this.instructors.add(instructor);
+    }
+
+    public boolean containsDate(DateTime date) {
+        if (daysOfTheWeek.contains(daysOfWeekTranslation[date.getDayOfWeek()])) {
+            LocalTime time = date.toLocalTime();
+            if ((!endTime.toLocalTime().isBefore(time)) && (!startTime.toLocalTime().isAfter(time))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

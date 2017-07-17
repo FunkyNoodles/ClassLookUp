@@ -8,6 +8,9 @@ import android.view.View;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -27,6 +30,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import io.github.funkynoodles.classlookup.helpers.Utilities;
+import io.github.funkynoodles.classlookup.lookup.SearchIndex;
 import io.github.funkynoodles.classlookup.models.Course;
 import io.github.funkynoodles.classlookup.models.Meeting;
 import io.github.funkynoodles.classlookup.models.MetaTerm;
@@ -194,14 +198,14 @@ public class DownloadTermTask extends AsyncTask<Void, Integer, Term> {
                                 section.setCourseId(node.getAttributes().getNamedItem("id").getNodeValue());
                             }
 
-                            DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm", Locale.ENGLISH);
+                            DateTimeFormatter format = DateTimeFormat.forPattern("yyyy-MM-dd-HH:mm");
                             NodeList startDates = sectionDoc.getElementsByTagName("startDate");
                             if (startDates.getLength() == 0){
                                 // There is no start or end dates
                                 continue;
                             }
-                            Date startDate = format.parse(startDates.item(0).getTextContent());
-                            Date endDate = format.parse(sectionDoc.getElementsByTagName("endDate").item(0).getTextContent());
+                            DateTime startDate = format.parseDateTime(startDates.item(0).getTextContent());
+                            DateTime endDate = format.parseDateTime(sectionDoc.getElementsByTagName("endDate").item(0).getTextContent());
                             section.setStartDate(startDate);
                             section.setEndDate(endDate);
 
@@ -219,9 +223,9 @@ public class DownloadTermTask extends AsyncTask<Void, Integer, Term> {
                                 NodeList startNodeList = element.getElementsByTagName("start");
                                 NodeList endNodeList = element.getElementsByTagName("end");
                                 if(startNodeList.getLength() > 0 && endNodeList.getLength() > 0){
-                                    DateFormat timeFormat = new SimpleDateFormat("KK:mm aa", Locale.ENGLISH);
-                                    Date startTime = timeFormat.parse(startNodeList.item(0).getTextContent());
-                                    Date endTime = timeFormat.parse(endNodeList.item(0).getTextContent());
+                                    DateTimeFormatter timeFormat = DateTimeFormat.forPattern("KK:mm aa");
+                                    DateTime startTime = timeFormat.parseDateTime(startNodeList.item(0).getTextContent());
+                                    DateTime endTime = timeFormat.parseDateTime(endNodeList.item(0).getTextContent());
                                     meeting.setStartTime(startTime);
                                     meeting.setEndTime(endTime);
                                 }
@@ -264,6 +268,16 @@ public class DownloadTermTask extends AsyncTask<Void, Integer, Term> {
             outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
             outputStream.write(termJson.getBytes());
             outputStream.close();
+
+            SearchIndex index = new SearchIndex();
+            index.buildIndex(term);
+            DateTime testTime = new DateTime(2017, 7, 11, 13, 20);
+            Section s = index.get("Electrical & Computer Eng Bldg", "2013", testTime);
+            if(s != null){
+                System.out.println(s.getSubject() + " " + s.getCourse());
+            }else{
+                System.out.println("This shouldnt happen");
+            }
             return term;
         }catch (Exception e){
             e.printStackTrace();

@@ -1,7 +1,8 @@
 package io.github.funkynoodles.classlookup.models;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Section {
@@ -11,17 +12,16 @@ public class Section {
     private String href;
     private String sectionText;
     private String sectionNotes;
-    private Date startDate;
-    private Date endDate;
+    private DateTime startDate;
+    private DateTime endDate;
     private List<Meeting> meetings;
-
     private String term;
     private String subject;
     private String subjectId;
     private String course;
     private String courseId;
 
-    public Section(String id, String href, String sectionNumber){
+    public Section(String id, String href, String sectionNumber) {
         this.id = id;
         this.href = href;
         this.sectionNumber = sectionNumber;
@@ -68,19 +68,19 @@ public class Section {
         this.sectionNotes = sectionNotes;
     }
 
-    public Date getStartDate() {
+    public DateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(DateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public DateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(DateTime endDate) {
         this.endDate = endDate;
     }
 
@@ -130,5 +130,14 @@ public class Section {
 
     public void setCourseId(String courseId) {
         this.courseId = courseId;
+    }
+
+    public boolean containsDate(DateTime date) {
+        for (Meeting meeting : meetings) {
+            if (meeting.containsDate(date)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
