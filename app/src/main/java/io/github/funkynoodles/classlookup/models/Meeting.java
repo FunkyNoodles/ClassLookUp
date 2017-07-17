@@ -101,8 +101,9 @@ public class Meeting {
 
     public boolean containsDate(DateTime date) {
         if (daysOfTheWeek.contains(daysOfWeekTranslation[date.getDayOfWeek()])) {
-            LocalTime time = date.toLocalTime();
-            if ((!endTime.toLocalTime().isBefore(time)) && (!startTime.toLocalTime().isAfter(time))) {
+            DateTime startTime = this.startTime.withDate(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
+            DateTime endTime = this.endTime.withDate(date.getYear(), date.getMonthOfYear(), date.getDayOfMonth());
+            if ((!endTime.isBefore(date)) && (!startTime.isAfter(date))) {
                 return true;
             }
         }
