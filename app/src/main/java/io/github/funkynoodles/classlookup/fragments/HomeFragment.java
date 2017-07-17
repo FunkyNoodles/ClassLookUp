@@ -49,25 +49,25 @@ public class HomeFragment extends Fragment {
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String filePath = getActivity().getFilesDir() + "/" + "Summer 2017.json";
-                try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-
-                    Gson gson = new GsonBuilder()
-                            .registerTypeAdapter(DateTime.class, new DateTimeConverter())
-                            .create();
-                    Term term = gson.fromJson(br, Term.class);
-                    SearchIndex index = new SearchIndex();
-                    index.buildIndex(term);
-                    DateTime testTime = new DateTime(2017, 7, 11, 13, 50);
-                    Section s = index.get("Electrical & Computer Eng Bldg", "2013", testTime);
-                    if(s != null){
-                        System.out.println(s.getSubject() + " " + s.getCourse());
-                    }else{
-                        System.out.println("This shouldnt happen");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                String filePath = getActivity().getFilesDir() + "/" + "Summer 2017.json";
+//                try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+//
+//                    Gson gson = new GsonBuilder()
+//                            .registerTypeAdapter(DateTime.class, new DateTimeConverter())
+//                            .create();
+//                    Term term = gson.fromJson(br, Term.class);
+//                    SearchIndex index = new SearchIndex();
+//                    index.buildIndex(term);
+//                    DateTime testTime = new DateTime(2017, 7, 11, 13, 50);
+//                    Section s = index.get("Electrical & Computer Eng Bldg", "2013", testTime);
+//                    if(s != null){
+//                        System.out.println(s.getSubject() + " " + s.getCourse());
+//                    }else{
+//                        System.out.println("This shouldnt happen");
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
             }
         });
         return view;

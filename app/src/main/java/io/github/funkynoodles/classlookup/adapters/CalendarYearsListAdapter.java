@@ -3,7 +3,6 @@ package io.github.funkynoodles.classlookup.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,39 +11,16 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.daimajia.numberprogressbar.NumberProgressBar;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.StringReader;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import io.github.funkynoodles.classlookup.R;
 import io.github.funkynoodles.classlookup.fragments.DownloadedFileDialogFragment;
-import io.github.funkynoodles.classlookup.helpers.Utilities;
 import io.github.funkynoodles.classlookup.models.CalendarYear;
 import io.github.funkynoodles.classlookup.models.CalendarYears;
-import io.github.funkynoodles.classlookup.models.Course;
 import io.github.funkynoodles.classlookup.models.MetaTerm;
-import io.github.funkynoodles.classlookup.models.Section;
-import io.github.funkynoodles.classlookup.models.Subject;
-import io.github.funkynoodles.classlookup.models.Term;
 import io.github.funkynoodles.classlookup.tasks.DownloadTermTask;
 
 public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
@@ -53,24 +29,27 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
     private CalendarYears calendarYears = null;
     private List<String> fileNames;
 
-    public CalendarYearsListAdapter(Activity context){
+    public CalendarYearsListAdapter(Activity context) {
         this.context = context;
         fileNames = new ArrayList<>();
-        File file = context.getFilesDir();
-        for (File f : file.listFiles()){
-            if(f.isFile()){
+        File file = context.getDir("schedules", Context.MODE_PRIVATE);
+        if (!file.exists()) {
+            return;
+        }
+        for (File f : file.listFiles()) {
+            if (f.isFile()) {
                 fileNames.add(f.getName());
             }
         }
     }
 
     @Override
-    public MetaTerm getChild(int groupPosition, int childPosition){
+    public MetaTerm getChild(int groupPosition, int childPosition) {
         return calendarYears.getYears().get(groupPosition).getMetaTerms().get(childPosition);
     }
 
     @Override
-    public long getChildId(int groupPosition, int childPosition){
+    public long getChildId(int groupPosition, int childPosition) {
         return childPosition;
     }
 
@@ -85,9 +64,9 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
 
         final MetaTerm metaTerm = getChild(groupPosition, childPosition);
 
-        TextView termText = (TextView)convertView.findViewById(R.id.termText);
+        TextView termText = (TextView) convertView.findViewById(R.id.termText);
         termText.setText(metaTerm.getText());
-        metaTerm.setDownloadButton((Button)convertView.findViewById(R.id.downloadButton));
+        metaTerm.setDownloadButton((Button) convertView.findViewById(R.id.downloadButton));
         metaTerm.getDownloadButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,7 +75,7 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        metaTerm.setDownloadedButton((Button)convertView.findViewById(R.id.downloadedButton));
+        metaTerm.setDownloadedButton((Button) convertView.findViewById(R.id.downloadedButton));
         metaTerm.getDownloadedButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +84,7 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        Button cancelDownloadButton = (Button)convertView.findViewById(R.id.cancelButton);
+        Button cancelDownloadButton = (Button) convertView.findViewById(R.id.cancelButton);
         cancelDownloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,11 +94,11 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        metaTerm.setDownloadProgress((NumberProgressBar)convertView.findViewById(R.id.downloadProgress));
+        metaTerm.setDownloadProgress((NumberProgressBar) convertView.findViewById(R.id.downloadProgress));
         metaTerm.setDownloadingLayout(convertView.findViewById(R.id.downloadingLayout));
 
         String fileString = metaTerm.getText() + ".json";
-        if(fileNames.contains(fileString)){
+        if (fileNames.contains(fileString)) {
             // If the file has been downloaded before
             metaTerm.getDownloadButton().setVisibility(View.GONE);
             metaTerm.getDownloadedButton().setVisibility(View.VISIBLE);
@@ -129,12 +108,12 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public int getChildrenCount(int groupPosition){
+    public int getChildrenCount(int groupPosition) {
         return calendarYears.getYears().get(groupPosition).getMetaTerms().size();
     }
 
     @Override
-    public CalendarYear getGroup(int groupPosition){
+    public CalendarYear getGroup(int groupPosition) {
         return calendarYears.getYears().get(groupPosition);
     }
 
@@ -159,27 +138,27 @@ public class CalendarYearsListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public int getGroupCount(){
+    public int getGroupCount() {
         return calendarYears.getYears().size();
     }
 
     @Override
-    public boolean hasStableIds(){
+    public boolean hasStableIds() {
         return true;
     }
 
     @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition){
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
 
-    public void clear(){
-        if(this.calendarYears != null) {
+    public void clear() {
+        if (this.calendarYears != null) {
             this.calendarYears.getYears().clear();
         }
     }
 
-    public void setCalendarYears(CalendarYears calendarYears){
+    public void setCalendarYears(CalendarYears calendarYears) {
         this.calendarYears = calendarYears;
     }
 }

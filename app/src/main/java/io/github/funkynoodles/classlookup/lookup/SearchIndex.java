@@ -42,5 +42,4 @@ public class SearchIndex {
         }
         return building.get(roomNumber, date);
     }
-
 }

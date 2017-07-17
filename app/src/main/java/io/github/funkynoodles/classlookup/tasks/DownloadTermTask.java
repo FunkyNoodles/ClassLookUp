@@ -17,6 +17,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringReader;
 import java.net.URL;
@@ -261,12 +262,15 @@ public class DownloadTermTask extends AsyncTask<Void, Integer, Term> {
                     .create();
             String termJson = gson.toJson(term);
             String fileName = term.getLabel() + ".json";
-            FileOutputStream outputStream;
+            File scheduleDir = context.getDir("schedules", Context.MODE_PRIVATE);
+            if(!scheduleDir.exists()){
+                scheduleDir.mkdirs();
+            }
 
             if(isCancelled()){
                 return null;
             }
-            outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            FileOutputStream outputStream = new FileOutputStream(new File(scheduleDir, fileName));
             outputStream.write(termJson.getBytes());
             outputStream.close();
 
