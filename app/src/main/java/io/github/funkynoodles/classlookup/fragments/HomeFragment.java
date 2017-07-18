@@ -8,20 +8,41 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 
-import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.weiwangcn.betterspinner.library.BetterSpinner;
 
+import org.joda.time.DateTime;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.github.funkynoodles.classlookup.R;
+import io.github.funkynoodles.classlookup.adapters.BuildingNameAdapter;
 import io.github.funkynoodles.classlookup.adapters.TermSpinnerAdapter;
+import io.github.funkynoodles.classlookup.gsonconverters.DateTimeConverter;
+import io.github.funkynoodles.classlookup.lookup.SearchIndex;
+import io.github.funkynoodles.classlookup.models.Section;
+import io.github.funkynoodles.classlookup.models.Term;
 
 public class HomeFragment extends Fragment {
 
     private TermSpinnerAdapter termAdapter;
+    private BuildingNameAdapter buildingNameAdapter;
+    private Map<String, SearchIndex> searchIndexMap;
+
+    public HomeFragment() {
+        searchIndexMap = new HashMap<>();
+    }
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -30,6 +51,8 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        buildingNameAdapter = new BuildingNameAdapter(getContext(), new ArrayList<String>());
 
         List<String> fileNames = new ArrayList<>();
         File file = getContext().getDir("schedules", Context.MODE_PRIVATE);
@@ -49,40 +72,44 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-//                String filePath = getActivity().getFilesDir() + "/" + "Summer 2017.json";
-//                try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-//
-//                    Gson gson = new GsonBuilder()
-//                            .registerTypeAdapter(DateTime.class, new DateTimeConverter())
-//                            .create();
-//                    Term term = gson.fromJson(br, Term.class);
-//                    SearchIndex index = new SearchIndex();
-//                    index.buildIndex(term);
-//                    DateTime testTime = new DateTime(2017, 7, 11, 13, 50);
-//                    Section s = index.get("Electrical & Computer Eng Bldg", "2013", testTime);
-//                    if(s != null){
-//                        System.out.println(s.getSubject() + " " + s.getCourse());
-//                    }else{
-//                        System.out.println("This shouldnt happen");
-//                    }
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-        MaterialBetterSpinner termSpinner = (MaterialBetterSpinner)view.findViewById(R.id.termSpinner);
+        BetterSpinner termSpinner = (BetterSpinner) view.findViewById(R.id.termSpinner);
         termSpinner.setAdapter(termAdapter);
-        termSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+
+        final AutoCompleteTextView buildingNameAutoText = (AutoCompleteTextView) view.findViewById(R.id.buildingNameAutoText);
+        buildingNameAutoText.setThreshold(1);
+        buildingNameAutoText.setAdapter(buildingNameAdapter);
+
+
+        termSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String termName = (String) parent.getItemAtPosition(position);
+                File file = new File(getActivity().getDir("schedules", Context.MODE_PRIVATE), termName + ".json");
+                // TODO: This needs to be in an AsyncTask
+                if (searchIndexMap.get(termName) == null) {
+                    try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 
-            }
+                        Gson gson = new GsonBuilder()
+                                .registerTypeAdapter(DateTime.class, new DateTimeConverter())
+                                .create();
+                        Term term = gson.fromJson(br, Term.class);
+                        SearchIndex searchIndex = new SearchIndex();
+                        searchIndex.buildIndex(term);
+                        searchIndexMap.put(termName, searchIndex);
+                        //buildingNameAdapter.clear();
+                        for (String s : searchIndex.buildingMap.keySet()) {
+                            buildingNameAdapter.add(s);
+                        }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                buildingNameAdapter.notifyDataSetChanged();
             }
         });
 
         return view;
     }
-
 }

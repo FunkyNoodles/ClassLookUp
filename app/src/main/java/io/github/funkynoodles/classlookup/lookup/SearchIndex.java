@@ -24,6 +24,9 @@ public class SearchIndex {
             for (Course course : subject.getCourses()) {
                 for (Section section : course.getSections()) {
                     for (Meeting meeting : section.getMeetings()) {
+                        if (meeting.getBuildingName() == null) {
+                            break;
+                        }
                         if (buildingMap.get(meeting.getBuildingName()) == null) {
                             buildingMap.put(meeting.getBuildingName(), new Building());
                         }

@@ -8,19 +8,35 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.Collection;
 import java.util.List;
 
 import io.github.funkynoodles.classlookup.R;
 
-public class TermSpinnerAdapter extends ArrayAdapter<String> {
+public class BuildingNameAdapter extends ArrayAdapter<String> {
 
     private List<String> data;
     private Context context;
 
-    public TermSpinnerAdapter(Context context, List<String> data) {
+    public BuildingNameAdapter(Context context, List<String> data) {
         super(context, R.layout.term_spinner_item, data);
         this.data = data;
         this.context = context;
+    }
+
+    @Override
+    public void clear(){
+        data.clear();
+    }
+
+    @Override
+    public void addAll(@NonNull Collection<? extends String> collection){
+        data.addAll(collection);
+    }
+
+    @Override
+    public void add(String s){
+        data.add(s);
     }
 
     @Override
@@ -30,8 +46,7 @@ public class TermSpinnerAdapter extends ArrayAdapter<String> {
 
     @Override
     public String getItem(int position) {
-        String fileName = data.get(position);
-        return fileName.substring(0, fileName.length() - 5);
+        return data.get(position);
     }
 
     @Override
@@ -47,14 +62,14 @@ public class TermSpinnerAdapter extends ArrayAdapter<String> {
     @Override
     @NonNull
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        String termName = data.get(position);
+        String buildingName = data.get(position);
 
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.term_spinner_item, parent, false);
+            convertView = inflater.inflate(R.layout.buildingname_autocomplete_item, parent, false);
         }
-        TextView termSpinnerText = (TextView)convertView.findViewById(R.id.termSpinnerText);
-        termSpinnerText.setText(termName.substring(0, termName.length() - 5));
+        TextView termSpinnerText = (TextView)convertView.findViewById(R.id.buildingNameText);
+        termSpinnerText.setText(buildingName);
 
         return convertView;
     }

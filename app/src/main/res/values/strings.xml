@@ -4,12 +4,15 @@
     <string name="textHome">Home</string>
     <string name="textSettings">Settings</string>
     <string name="textSchedules">Schedules</string>
-    
-    <string name="textTerm">Term</string>
 
     <string name="textDownload">Download</string>
     <string name="textDownloaded">Downloaded</string>
     <string name="textCancel">Cancel</string>
+
+    <string name="textFindClass">Find a Class</string>
+    <string name="textTerm">Term</string>
+    <string name="textBuildingName">Building Name</string>
+    <string name="textRoomName">Room Name</string>
 
     <string name="textScheduleInstruction">Select a semester to download</string>
     <string name="textFetching">Fetching</string>

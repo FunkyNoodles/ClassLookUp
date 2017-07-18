@@ -2,16 +2,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_margin="@dimen/activityMargin"
+    android:orientation="vertical"
     tools:context="io.github.funkynoodles.classlookup.fragments.HomeFragment">
 
-    <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
-        android:id="@+id/termSpinner"
+    <TextView
+        style="?android:attr/listSeparatorTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/textTerm"
-        app:met_floatingLabel="normal"/>
+        android:text="@string/textFindClass"
+        android:textColor="@color/colorAccent" />
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.weiwangcn.betterspinner.library.BetterSpinner
+            android:id="@+id/termSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/textTerm"
+            android:shadowColor="@color/colorAccent"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <AutoCompleteTextView
+            android:id="@+id/buildingNameAutoText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/textBuildingName" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/roomNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="@string/textRoomName" />
+
+    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>
