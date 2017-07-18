@@ -30,7 +30,8 @@ public class TermSpinnerAdapter extends ArrayAdapter<String> {
 
     @Override
     public String getItem(int position) {
-        return data.get(position);
+        String fileName = data.get(position);
+        return fileName.substring(0, fileName.length() - 5);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class TermSpinnerAdapter extends ArrayAdapter<String> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.term_spinner_item, parent, false);
             TextView termSpinnerText = (TextView)convertView.findViewById(R.id.termSpinnerText);
-            termSpinnerText.setText(termName);
+            termSpinnerText.setText(termName.substring(0, termName.length() - 5));
         }
 
         return convertView;
