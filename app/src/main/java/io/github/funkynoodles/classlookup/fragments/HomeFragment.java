@@ -31,7 +31,6 @@ import io.github.funkynoodles.classlookup.adapters.BuildingNameAdapter;
 import io.github.funkynoodles.classlookup.adapters.TermSpinnerAdapter;
 import io.github.funkynoodles.classlookup.gsonconverters.DateTimeConverter;
 import io.github.funkynoodles.classlookup.lookup.SearchIndex;
-import io.github.funkynoodles.classlookup.models.Section;
 import io.github.funkynoodles.classlookup.models.Term;
 
 public class HomeFragment extends Fragment {
@@ -99,7 +98,7 @@ public class HomeFragment extends Fragment {
                         searchIndexMap.put(termName, searchIndex);
                         //buildingNameAdapter.clear();
                         for (String s : searchIndex.buildingMap.keySet()) {
-                            buildingNameAdapter.add(s);
+                            buildingNameAdapter.addToPermanent(s);
                         }
 
                     } catch (IOException e) {
