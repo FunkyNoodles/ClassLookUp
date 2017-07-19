@@ -6,6 +6,8 @@
 
     <dimen name="dropdownPadding">16dp</dimen>
 
+    <dimen name="loadingScheduleProgressBarSize">120dp</dimen>
+
     <dimen name="scheduleTextPadding">25dp</dimen>
     <dimen name="schedulePadding">10dp</dimen>
 

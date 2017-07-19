@@ -1,8 +1,8 @@
 package io.github.funkynoodles.classlookup.tasks;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.AutoCompleteTextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,30 +13,36 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import io.github.funkynoodles.classlookup.adapters.BuildingNameAdapter;
+import io.github.funkynoodles.classlookup.dialogfragments.LoadingScheduleDialogFragment;
 import io.github.funkynoodles.classlookup.gsonconverters.DateTimeConverter;
 import io.github.funkynoodles.classlookup.lookup.SearchIndex;
 import io.github.funkynoodles.classlookup.lookup.TermIndex;
 import io.github.funkynoodles.classlookup.models.Term;
 
-public class LoadScheduleTaks extends AsyncTask<Void, Integer, Boolean> {
+public class LoadScheduleTask extends AsyncTask<Void, Integer, Boolean> {
 
     private SearchIndex searchIndex;
-    private Context context;
+    private Activity context;
     private String termName;
-    private AutoCompleteTextView autoCompleteTextView;
     private BuildingNameAdapter buildingNameAdapter;
+    LoadingScheduleDialogFragment loadingScheduleDialogFragment;
 
-    public LoadScheduleTaks(SearchIndex searchIndex, Context context, String termName,
-                            AutoCompleteTextView autoCompleteTextView, BuildingNameAdapter buildingNameAdapter) {
+    public LoadScheduleTask(SearchIndex searchIndex, Activity context, String termName,
+                            BuildingNameAdapter buildingNameAdapter) {
         this.searchIndex = searchIndex;
         this.context = context;
         this.termName = termName;
-        this.autoCompleteTextView = autoCompleteTextView;
         this.buildingNameAdapter = buildingNameAdapter;
     }
+
+    @Override
+    protected void onPreExecute() {
+        loadingScheduleDialogFragment = LoadingScheduleDialogFragment.newInstance();
+        loadingScheduleDialogFragment.show(context.getFragmentManager(), "loadingSchedule");
+    }
+
     @Override
     protected Boolean doInBackground(Void... params) {
         File file = new File(context.getDir("schedules", Context.MODE_PRIVATE), termName + ".json");
@@ -58,7 +64,7 @@ public class LoadScheduleTaks extends AsyncTask<Void, Integer, Boolean> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             for (String s : searchIndex.termIndexMap.get(termName).buildingMap.keySet()) {
                 buildingNameAdapter.addToPermanent(s);
             }
@@ -67,7 +73,8 @@ public class LoadScheduleTaks extends AsyncTask<Void, Integer, Boolean> {
     }
 
     @Override
-    protected void onPostExecute(Boolean ignore){
+    protected void onPostExecute(Boolean ignore) {
         buildingNameAdapter.notifyDataSetChanged();
+        loadingScheduleDialogFragment.dismiss();
     }
 }

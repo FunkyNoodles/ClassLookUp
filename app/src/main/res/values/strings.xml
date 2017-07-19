@@ -14,6 +14,8 @@
     <string name="textBuildingName">Building Name</string>
     <string name="textRoomName">Room Name</string>
 
+    <string name="textLoadingSchedule">Loading Schedule</string>
+
     <string name="textScheduleInstruction">Select a semester to download</string>
     <string name="textFetching">Fetching</string>
 

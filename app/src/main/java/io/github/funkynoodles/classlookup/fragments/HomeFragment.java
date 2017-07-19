@@ -10,29 +10,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.weiwangcn.betterspinner.library.BetterSpinner;
 
-import org.joda.time.DateTime;
-
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.github.funkynoodles.classlookup.R;
 import io.github.funkynoodles.classlookup.adapters.BuildingNameAdapter;
 import io.github.funkynoodles.classlookup.adapters.TermSpinnerAdapter;
-import io.github.funkynoodles.classlookup.gsonconverters.DateTimeConverter;
 import io.github.funkynoodles.classlookup.lookup.SearchIndex;
-import io.github.funkynoodles.classlookup.lookup.TermIndex;
-import io.github.funkynoodles.classlookup.models.Term;
-import io.github.funkynoodles.classlookup.tasks.LoadScheduleTaks;
+import io.github.funkynoodles.classlookup.tasks.LoadScheduleTask;
 
 public class HomeFragment extends Fragment {
 
@@ -89,7 +77,7 @@ public class HomeFragment extends Fragment {
                 if(termName.equals(currentTermName)){
                     return;
                 }
-                new LoadScheduleTaks(searchIndex, getActivity(), termName, buildingNameAutoText, buildingNameAdapter).execute();
+                new LoadScheduleTask(searchIndex, getActivity(), termName, buildingNameAdapter).execute();
                 currentTermName = termName;
             }
         });

@@ -1,4 +1,4 @@
-package io.github.funkynoodles.classlookup.fragments;
+package io.github.funkynoodles.classlookup.dialogfragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -66,7 +66,7 @@ public class DownloadedFileDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public void deleteFileFailed(final MetaTerm metaTerm) {
+    private void deleteFileFailed(final MetaTerm metaTerm) {
         Toast.makeText(getActivity(), getString(R.string.textCannotDeleteFile), Toast.LENGTH_LONG).show();
         metaTerm.getDownloadedButton().setVisibility(View.GONE);
         metaTerm.getDownloadButton().setVisibility(View.VISIBLE);

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.funkynoodles.classlookup.R;
-import io.github.funkynoodles.classlookup.fragments.DownloadedFileDialogFragment;
+import io.github.funkynoodles.classlookup.dialogfragments.DownloadedFileDialogFragment;
 import io.github.funkynoodles.classlookup.models.CalendarYear;
 import io.github.funkynoodles.classlookup.models.CalendarYears;
 import io.github.funkynoodles.classlookup.models.MetaTerm;
