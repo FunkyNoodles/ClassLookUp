@@ -34,6 +34,11 @@ public class BuildingNameAdapter extends ArrayAdapter<String> {
         this.data.clear();
     }
 
+    public void clearAll() {
+        data.clear();
+        permanentData.clear();
+    }
+
     @Override
     public void addAll(@NonNull Collection<? extends String> collection) {
         //data.addAll(collection);

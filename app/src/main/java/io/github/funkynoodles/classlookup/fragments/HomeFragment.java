@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -31,16 +30,19 @@ import io.github.funkynoodles.classlookup.adapters.BuildingNameAdapter;
 import io.github.funkynoodles.classlookup.adapters.TermSpinnerAdapter;
 import io.github.funkynoodles.classlookup.gsonconverters.DateTimeConverter;
 import io.github.funkynoodles.classlookup.lookup.SearchIndex;
+import io.github.funkynoodles.classlookup.lookup.TermIndex;
 import io.github.funkynoodles.classlookup.models.Term;
+import io.github.funkynoodles.classlookup.tasks.LoadScheduleTaks;
 
 public class HomeFragment extends Fragment {
 
     private TermSpinnerAdapter termAdapter;
     private BuildingNameAdapter buildingNameAdapter;
-    private Map<String, SearchIndex> searchIndexMap;
+    private SearchIndex searchIndex;
+    private String currentTermName;
 
     public HomeFragment() {
-        searchIndexMap = new HashMap<>();
+        searchIndex = new SearchIndex();
     }
 
     public static HomeFragment newInstance() {
@@ -71,7 +73,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        BetterSpinner termSpinner = (BetterSpinner) view.findViewById(R.id.termSpinner);
+        final BetterSpinner termSpinner = (BetterSpinner) view.findViewById(R.id.termSpinner);
         termSpinner.setAdapter(termAdapter);
 
 
@@ -84,28 +86,11 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String termName = (String) parent.getItemAtPosition(position);
-                File file = new File(getActivity().getDir("schedules", Context.MODE_PRIVATE), termName + ".json");
-                // TODO: This needs to be in an AsyncTask
-                if (searchIndexMap.get(termName) == null) {
-                    try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-
-                        Gson gson = new GsonBuilder()
-                                .registerTypeAdapter(DateTime.class, new DateTimeConverter())
-                                .create();
-                        Term term = gson.fromJson(br, Term.class);
-                        SearchIndex searchIndex = new SearchIndex();
-                        searchIndex.buildIndex(term);
-                        searchIndexMap.put(termName, searchIndex);
-                        //buildingNameAdapter.clear();
-                        for (String s : searchIndex.buildingMap.keySet()) {
-                            buildingNameAdapter.addToPermanent(s);
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                if(termName.equals(currentTermName)){
+                    return;
                 }
-                buildingNameAdapter.notifyDataSetChanged();
+                new LoadScheduleTaks(searchIndex, getActivity(), termName, buildingNameAutoText, buildingNameAdapter).execute();
+                currentTermName = termName;
             }
         });
 
