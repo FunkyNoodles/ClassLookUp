@@ -51,4 +51,11 @@
 
     </android.support.design.widget.TextInputLayout>
 
+    <TextView
+        android:id="@+id/dateText"
+        android:textSize="16sp"
+        android:text="Thu. "
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
