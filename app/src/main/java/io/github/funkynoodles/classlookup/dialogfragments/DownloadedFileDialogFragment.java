@@ -12,6 +12,7 @@ import android.widget.Toast;
 import java.io.File;
 
 import io.github.funkynoodles.classlookup.R;
+import io.github.funkynoodles.classlookup.fragments.HomeFragment;
 import io.github.funkynoodles.classlookup.models.MetaTerm;
 import io.github.funkynoodles.classlookup.tasks.DownloadTermTask;
 
@@ -56,6 +57,9 @@ public class DownloadedFileDialogFragment extends DialogFragment {
                                     if (deleted) {
                                         metaTerm.getDownloadedButton().setVisibility(View.GONE);
                                         metaTerm.getDownloadButton().setVisibility(View.VISIBLE);
+                                        HomeFragment homeFragment = (HomeFragment)getFragmentManager().findFragmentByTag("Home Fragment");
+                                        assert homeFragment != null;
+                                        homeFragment.updateTermAdapter();
                                     } else {
                                         deleteFileFailed(metaTerm);
                                     }

@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.github.funkynoodles.classlookup.R;
@@ -53,7 +55,7 @@ public class TermSpinnerAdapter extends ArrayAdapter<String> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.term_spinner_item, parent, false);
         }
-        TextView termSpinnerText = (TextView)convertView.findViewById(R.id.termSpinnerText);
+        TextView termSpinnerText = (TextView) convertView.findViewById(R.id.termSpinnerText);
         termSpinnerText.setText(termName.substring(0, termName.length() - 5));
 
         return convertView;
@@ -72,5 +74,19 @@ public class TermSpinnerAdapter extends ArrayAdapter<String> {
     @Override
     public boolean isEnabled(int position) {
         return true;
+    }
+
+    public void updateContent() {
+        data.clear();
+        File file = getContext().getDir("schedules", Context.MODE_PRIVATE);
+        if (!file.exists()) {
+            return;
+        }
+        for (File f : file.listFiles()) {
+            if (f.isFile()) {
+                data.add(f.getName());
+            }
+        }
+        notifyDataSetChanged();
     }
 }

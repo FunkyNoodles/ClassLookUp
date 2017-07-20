@@ -84,4 +84,8 @@ public class HomeFragment extends Fragment {
 
         return view;
     }
+
+    public void updateTermAdapter(){
+        termAdapter.updateContent();
+    }
 }

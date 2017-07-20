@@ -26,6 +26,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import io.github.funkynoodles.classlookup.fragments.HomeFragment;
 import io.github.funkynoodles.classlookup.gsonconverters.DateTimeConverter;
 import io.github.funkynoodles.classlookup.helpers.Utilities;
 import io.github.funkynoodles.classlookup.models.Course;
@@ -297,5 +298,8 @@ public class DownloadTermTask extends AsyncTask<Void, Integer, Term> {
         }
         metaTerm.getDownloadingLayout().setVisibility(View.GONE);
         metaTerm.getDownloadedButton().setVisibility(View.VISIBLE);
+        HomeFragment homeFragment = (HomeFragment)context.getFragmentManager().findFragmentByTag("Home Fragment");
+        assert homeFragment != null;
+        homeFragment.updateTermAdapter();
     }
 }
