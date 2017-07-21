@@ -1,73 +1,84 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="@dimen/activityMargin"
-    android:orientation="vertical"
-    tools:context="io.github.funkynoodles.classlookup.fragments.HomeFragment">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ScrollView01"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <TextView
-        style="?android:attr/listSeparatorTextViewStyle"
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/textFindClass"
-        android:textColor="@color/colorAccent" />
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/activityMargin"
+        android:orientation="vertical"
+        tools:context="io.github.funkynoodles.classlookup.fragments.HomeFragment">
 
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.weiwangcn.betterspinner.library.BetterSpinner
-            android:id="@+id/termSpinner"
+        <TextView
+            style="?android:attr/listSeparatorTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/textTerm"
-            android:shadowColor="@color/colorAccent"/>
-    </android.support.design.widget.TextInputLayout>
+            android:text="@string/textFindClass"
+            android:textColor="@color/colorAccent" />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <AutoCompleteTextView
-            android:id="@+id/buildingNameAutoText"
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.weiwangcn.betterspinner.library.BetterSpinner
+                android:id="@+id/termSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/textTerm"
+                android:shadowColor="@color/colorAccent" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/buildingNameAutoText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/textBuildingName" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/roomNameText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/textRoomName"
+                android:inputType="text" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/dateText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/textBuildingName" />
+            android:padding="@dimen/textViewPadding"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/roomNameText"
+        <TextView
+            android:id="@+id/timeText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:hint="@string/textRoomName" />
+            android:padding="@dimen/textViewPadding"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-    </android.support.design.widget.TextInputLayout>
+        <Button
+            android:id="@+id/searchButton"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:text="@string/textSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/dateText"
-        android:textSize="24sp"
-        android:padding="@dimen/textViewPadding"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/timeText"
-        android:text="asda"
-        android:textSize="24sp"
-        android:padding="@dimen/textViewPadding"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

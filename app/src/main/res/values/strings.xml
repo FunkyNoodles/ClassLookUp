@@ -8,11 +8,13 @@
     <string name="textDownload">Download</string>
     <string name="textDownloaded">Downloaded</string>
     <string name="textCancel">Cancel</string>
+    <string name="textSearch">Search</string>
 
     <string name="textFindClass">Find a Class</string>
     <string name="textTerm">Term</string>
     <string name="textBuildingName">Building Name</string>
     <string name="textRoomName">Room Name</string>
+    <string name="textSearchInvalid">Please put in valid information</string>
 
     <string name="textLoadingSchedule">Loading Schedule</string>
 
