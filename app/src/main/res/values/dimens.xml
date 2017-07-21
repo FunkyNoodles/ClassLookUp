@@ -5,6 +5,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="dropdownPadding">16dp</dimen>
+    <dimen name="textViewPadding">10dp</dimen>
 
     <dimen name="loadingScheduleProgressBarSize">120dp</dimen>
 
