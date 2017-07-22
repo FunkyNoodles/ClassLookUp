@@ -2,10 +2,11 @@ package io.github.funkynoodles.classlookup.models;
 
 import org.joda.time.DateTime;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Section {
+public class Section implements Serializable{
 
     private String id;
     private String sectionNumber;

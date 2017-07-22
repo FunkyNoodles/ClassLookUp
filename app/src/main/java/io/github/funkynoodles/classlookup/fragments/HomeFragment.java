@@ -2,10 +2,11 @@ package io.github.funkynoodles.classlookup.fragments;
 
 
 import android.app.DatePickerDialog;
+import android.app.Fragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.funkynoodles.classlookup.R;
+import io.github.funkynoodles.classlookup.activities.SectionResultActivity;
 import io.github.funkynoodles.classlookup.adapters.BuildingNameAdapter;
 import io.github.funkynoodles.classlookup.adapters.TermSpinnerAdapter;
 import io.github.funkynoodles.classlookup.lookup.SearchIndex;
@@ -104,7 +106,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        roomNameEditText = (EditText)view.findViewById(R.id.roomNameText);
+        roomNameEditText = (EditText) view.findViewById(R.id.roomNameText);
 
         dateTextView = (TextView) view.findViewById(R.id.dateText);
         dateTextView.setText(getDisplayDateString(selectedCalendar));
@@ -172,7 +174,7 @@ public class HomeFragment extends Fragment {
         public void onClick(View v) {
             String termName = termSpinner.getText().toString();
             if (searchIndex.termIndexMap.get(termName) == null) {
-                searchButtonError();
+                Toast.makeText(getActivity(), getString(R.string.textSearchInvalid), Toast.LENGTH_LONG).show();
                 return;
             }
             TermIndex termIndex = searchIndex.termIndexMap.get(termName);
@@ -184,14 +186,13 @@ public class HomeFragment extends Fragment {
                     selectedCalendar.get(Calendar.HOUR_OF_DAY),
                     selectedCalendar.get(Calendar.MINUTE));
             Section section = termIndex.get(buildingName, roomName, dateTime);
-            if(section == null){
-                searchButtonError();
+            if (section == null) {
+                Toast.makeText(getActivity(), getString(R.string.textSearchNoResults), Toast.LENGTH_LONG).show();
                 return;
             }
+            Intent intent = new Intent(getActivity(), SectionResultActivity.class);
+            intent.putExtra("section", section);
+            startActivity(intent);
         }
-    }
-
-    private void searchButtonError(){
-        Toast.makeText(getActivity(), getString(R.string.textSearchInvalid), Toast.LENGTH_LONG).show();
     }
 }

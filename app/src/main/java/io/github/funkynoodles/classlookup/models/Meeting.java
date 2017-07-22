@@ -3,10 +3,11 @@ package io.github.funkynoodles.classlookup.models;
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Meeting {
+public class Meeting implements Serializable{
 
     private final static String[] daysOfWeekTranslation = {
             "", "M", "T", "W", "R", "F"
