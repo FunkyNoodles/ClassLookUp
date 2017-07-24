@@ -1,5 +1,8 @@
 package io.github.funkynoodles.classlookup.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 
@@ -23,7 +26,8 @@ public class Meeting implements Serializable{
     private String buildingName;
     private List<String> instructors;
 
-    public Meeting(String id) {
+    @JsonCreator
+    public Meeting(@JsonProperty("id") String id) {
         this.id = id;
         instructors = new ArrayList<>();
     }

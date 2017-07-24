@@ -1,5 +1,8 @@
 package io.github.funkynoodles.classlookup.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -22,7 +25,8 @@ public class Section implements Serializable{
     private String course;
     private String courseId;
 
-    public Section(String id, String href, String sectionNumber) {
+    @JsonCreator
+    public Section(@JsonProperty("id") String id, @JsonProperty("href") String href, @JsonProperty("sectionNumber") String sectionNumber) {
         this.id = id;
         this.href = href;
         this.sectionNumber = sectionNumber;

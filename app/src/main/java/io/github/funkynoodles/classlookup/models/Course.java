@@ -1,5 +1,8 @@
 package io.github.funkynoodles.classlookup.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +16,8 @@ public class Course {
     private String classScheduleInformation;
     private List<Section> sections;
 
-    public Course(String id, String href, String label){
+    @JsonCreator
+    public Course(@JsonProperty("id") String id, @JsonProperty("href") String href, @JsonProperty("label") String label){
         this.id = id;
         this.label = label;
         this.href = href;

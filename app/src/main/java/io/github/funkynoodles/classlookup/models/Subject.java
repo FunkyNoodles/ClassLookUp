@@ -1,5 +1,8 @@
 package io.github.funkynoodles.classlookup.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +13,8 @@ public class Subject {
     private String text;
     private List<Course> courses;
 
-    public Subject(String id, String href, String text){
+    @JsonCreator
+    public Subject(@JsonProperty("id") String id, @JsonProperty("href") String href, @JsonProperty("text") String text){
         this.id = id;
         this.href = href;
         this.text = text;

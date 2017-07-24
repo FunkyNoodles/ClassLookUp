@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import org.joda.time.DateTime;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,7 +14,6 @@ import java.io.IOException;
 
 import io.github.funkynoodles.classlookup.adapters.BuildingNameAdapter;
 import io.github.funkynoodles.classlookup.dialogfragments.LoadingScheduleDialogFragment;
-import io.github.funkynoodles.classlookup.gsonconverters.DateTimeConverter;
 import io.github.funkynoodles.classlookup.lookup.SearchIndex;
 import io.github.funkynoodles.classlookup.lookup.TermIndex;
 import io.github.funkynoodles.classlookup.models.Term;
@@ -49,11 +46,9 @@ public class LoadScheduleTask extends AsyncTask<Void, Integer, Boolean> {
         buildingNameAdapter.clearAll();
         if (searchIndex.termIndexMap.get(termName) == null) {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-
-                Gson gson = new GsonBuilder()
-                        .registerTypeAdapter(DateTime.class, new DateTimeConverter())
-                        .create();
-                Term term = gson.fromJson(br, Term.class);
+                final ObjectMapper mapper = new ObjectMapper();
+                mapper.registerModule(new JodaModule());
+                Term term = mapper.readValue(br, Term.class);
                 TermIndex termIndex = new TermIndex();
                 termIndex.buildIndex(term);
                 searchIndex.termIndexMap.put(termName, termIndex);

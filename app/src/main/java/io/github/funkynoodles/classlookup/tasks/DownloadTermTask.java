@@ -5,8 +5,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -18,7 +18,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.StringReader;
 import java.net.URL;
 
@@ -27,7 +26,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import io.github.funkynoodles.classlookup.fragments.HomeFragment;
-import io.github.funkynoodles.classlookup.gsonconverters.DateTimeConverter;
 import io.github.funkynoodles.classlookup.helpers.Utilities;
 import io.github.funkynoodles.classlookup.models.Course;
 import io.github.funkynoodles.classlookup.models.Meeting;
@@ -254,14 +252,6 @@ public class DownloadTermTask extends AsyncTask<Void, Integer, Term> {
                     }
                 }
             }
-            if(isCancelled()){
-                return null;
-            }
-            Gson gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .registerTypeAdapter(DateTime.class, new DateTimeConverter())
-                    .create();
-            String termJson = gson.toJson(term);
             String fileName = term.getLabel() + ".json";
             File scheduleDir = context.getDir("schedules", Context.MODE_PRIVATE);
             if(!scheduleDir.exists()){
@@ -271,9 +261,9 @@ public class DownloadTermTask extends AsyncTask<Void, Integer, Term> {
             if(isCancelled()){
                 return null;
             }
-            FileOutputStream outputStream = new FileOutputStream(new File(scheduleDir, fileName));
-            outputStream.write(termJson.getBytes());
-            outputStream.close();
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JodaModule());
+            mapper.writeValue(new File(scheduleDir, fileName), term);
 
             return term;
         }catch (Exception e){
