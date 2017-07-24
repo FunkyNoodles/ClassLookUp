@@ -299,7 +299,9 @@ public class DownloadTermTask extends AsyncTask<Void, Integer, Term> {
         metaTerm.getDownloadingLayout().setVisibility(View.GONE);
         metaTerm.getDownloadedButton().setVisibility(View.VISIBLE);
         HomeFragment homeFragment = (HomeFragment)context.getFragmentManager().findFragmentByTag("Home Fragment");
-        assert homeFragment != null;
+        if(homeFragment == null) {
+            throw new AssertionError("HomeFragment should not be null");
+        }
         homeFragment.updateTermAdapter();
     }
 }
