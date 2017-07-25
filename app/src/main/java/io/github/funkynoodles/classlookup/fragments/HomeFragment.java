@@ -163,7 +163,11 @@ public class HomeFragment extends Fragment {
 
     private String getDisplayTimeString(Calendar c) {
         DecimalFormat formatter = new DecimalFormat("00");
-        String displayTime = Integer.toString(c.get(Calendar.HOUR));
+        int hour = c.get(Calendar.HOUR);
+        if (hour == 0) {
+            hour = 12;
+        }
+        String displayTime = Integer.toString(hour);
         displayTime += ":" + formatter.format(c.get(Calendar.MINUTE));
         displayTime += " " + c.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.ENGLISH);
         return displayTime;
@@ -181,7 +185,7 @@ public class HomeFragment extends Fragment {
             String buildingName = buildingNameAutoText.getText().toString();
             String roomName = roomNameEditText.getText().toString();
             DateTime dateTime = new DateTime(selectedCalendar.get(Calendar.YEAR),
-                    selectedCalendar.get(Calendar.MONTH),
+                    selectedCalendar.get(Calendar.MONTH) + 1,
                     selectedCalendar.get(Calendar.DAY_OF_MONTH),
                     selectedCalendar.get(Calendar.HOUR_OF_DAY),
                     selectedCalendar.get(Calendar.MINUTE));

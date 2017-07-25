@@ -4,16 +4,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Meeting implements Serializable{
+public class Meeting implements Serializable {
 
     private final static String[] daysOfWeekTranslation = {
-            "", "M", "T", "W", "R", "F"
+            "None", "M", "T", "W", "R", "F", "None", "None"
     };
 
     private String id;
